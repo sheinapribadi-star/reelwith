@@ -3,127 +3,137 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>ReelWith · Log what you watched</title>
-    <meta name="description" content="Snap a pic of movie night, say if you liked it, write a short note. Get picks based on what you loved." />
-    <meta name="theme-color" content="#0E0E14" />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2314141c'/><circle cx='50' cy='50' r='28' fill='%23e8a23a'/><circle cx='50' cy='50' r='12' fill='%2314141c'/></svg>" />
-    <script type="module" crossorigin src="/reelwith/assets/index-N50TPTcF.js"></script>
-    <link rel="stylesheet" crossorigin href="/reelwith/assets/index-BM_ACPh2.css">
+    <title>ReelWith</title>
+    <meta name="description" content="Dual-camera movie nights. Rank what you watched. Get picks from your list." />
+    <meta name="theme-color" content="#14110F" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%23F3E6D4'/><rect x='18' y='22' width='64' height='56' rx='4' fill='%2314110F'/><circle cx='50' cy='50' r='14' fill='%23E8A04A'/></svg>" />
+    <script type="module" crossorigin src="/reelwith/assets/index-A8NzbtSy.js"></script>
+    <link rel="stylesheet" crossorigin href="/reelwith/assets/index-BQpN_hjh.css">
   </head>
   <body>
-    <div class="grain" aria-hidden="true"></div>
-    <div class="app">
-      <header class="top">
-        <div class="brand">
-          <div class="mark" aria-hidden="true"></div>
-          <div>
-            <div class="name">ReelWith</div>
-            <div class="tag">log movie night in one go</div>
-          </div>
+    <div class="noise" aria-hidden="true"></div>
+    <div class="shell">
+      <header class="mast">
+        <div class="mast__mark" aria-hidden="true">
+          <span class="mast__hole"></span>
+          <span class="mast__hole"></span>
         </div>
-        <button class="btn primary sm" id="go-log" type="button">+ Log</button>
+        <div class="mast__text">
+          <p class="mast__kicker">pocket cinema diary</p>
+          <h1 class="mast__title">ReelWith</h1>
+        </div>
+        <button type="button" class="chip chip--solid" id="btn-new">Log one</button>
       </header>
 
-      <p class="intro" id="intro">
-        Snap (or upload) a pic from movie night, tap liked or not, add a short note.
-        That&rsquo;s the whole log. Your shelf builds recommendations from what you loved.
+      <p class="lede" id="lede">
+        Dual snap of movie night. Say liked / mid / dislike, then place it against films
+        you already ranked. Your list drives the picks.
       </p>
 
-      <nav class="tabs" role="tablist" aria-label="Main">
-        <button class="tab on" data-view="home" type="button">Home</button>
-        <button class="tab" data-view="log" type="button">Log</button>
-        <button class="tab" data-view="shelf" type="button">Shelf</button>
+      <nav class="nav" role="tablist" aria-label="Sections">
+        <button type="button" class="nav__btn on" data-view="home">Tonight</button>
+        <button type="button" class="nav__btn" data-view="log">Log</button>
+        <button type="button" class="nav__btn" data-view="rank">Rank</button>
+        <button type="button" class="nav__btn" data-view="picks">Picks</button>
       </nav>
 
       <main>
+        <!-- HOME -->
         <section id="view-home" class="view on">
-          <div class="toolbar">
-            <div>
-              <div class="eyebrow">For you</div>
-              <h2>Based on your likes</h2>
-            </div>
+          <div class="section-head">
+            <h2>Recent nights</h2>
+            <button type="button" class="linkish" id="btn-seed">demo reel</button>
           </div>
-          <div class="poster-rail" id="recs" aria-label="Recommendations"></div>
-
-          <div class="toolbar">
-            <div>
-              <div class="eyebrow">Recent</div>
-              <h2>Watch log</h2>
-            </div>
-            <button class="btn ghost sm" id="seed" type="button">Sample friends</button>
-          </div>
-          <div class="feed" id="feed"></div>
+          <div id="feed" class="feed"></div>
         </section>
 
+        <!-- LOG -->
         <section id="view-log" class="view" hidden>
-          <div class="toolbar">
-            <div>
-              <div class="eyebrow">One flow</div>
-              <h2>Log a watch</h2>
-            </div>
-          </div>
-          <p class="lede-sm">Pick a film → photo → liked? → short note → save.</p>
-
-          <div class="card step">
-            <div class="step-n">1 · Film</div>
-            <input id="movie-search" type="search" placeholder="Search titles…" autocomplete="off" />
-            <div class="pick-grid" id="search-results"></div>
-            <div class="picked" id="picked" hidden></div>
+          <div class="section-head">
+            <h2>Log a watch</h2>
+            <p class="hint">film → dual snap → vibe → place in rank</p>
           </div>
 
-          <div class="card step" id="step-photo">
-            <div class="step-n">2 · Photo</div>
-            <div class="viewfinder" id="viewfinder">
-              <video id="cam" playsinline muted hidden></video>
-              <img id="snap-preview" alt="" hidden />
-              <div class="vf-ph" id="vf-ph">
-                <p>Snap the couch, the screen, whoever&rsquo;s there.</p>
+          <article class="panel">
+            <p class="panel__step">01 film</p>
+            <input id="q" class="field" type="search" placeholder="Search the shelf…" autocomplete="off" />
+            <div id="grid" class="poster-grid"></div>
+            <div id="picked" class="picked" hidden></div>
+          </article>
+
+          <article class="panel">
+            <p class="panel__step">02 dual snap</p>
+            <div class="dual" id="dual">
+              <div class="dual__main">
+                <video id="cam" playsinline muted hidden></video>
+                <img id="shot-main" alt="" hidden />
+                <div class="dual__ph" id="ph-main">
+                  <span>back / room</span>
+                  <small>what you&rsquo;re watching</small>
+                </div>
               </div>
+              <div class="dual__pip" id="pip-wrap">
+                <img id="shot-pip" alt="" hidden />
+                <div class="dual__ph dual__ph--pip" id="ph-pip">
+                  <span>you</span>
+                </div>
+              </div>
+              <div class="dual__sprocket" aria-hidden="true"></div>
             </div>
-            <div class="cam-actions">
-              <button class="btn ghost" id="start-cam" type="button">Camera</button>
-              <button class="btn ghost" id="take-snap" type="button" disabled>Snap</button>
-              <label class="btn ghost">
-                Upload
-                <input type="file" id="upload-snap" accept="image/*" capture="environment" hidden />
-              </label>
-              <button class="btn ghost" id="skip-photo" type="button">Skip photo</button>
+            <div class="row">
+              <button type="button" class="chip" id="cam-back">Open back cam</button>
+              <button type="button" class="chip" id="snap-main" disabled>Snap room</button>
+              <label class="chip">Upload room<input type="file" id="up-main" accept="image/*" hidden /></label>
             </div>
-          </div>
+            <div class="row">
+              <button type="button" class="chip" id="cam-front" disabled>Open front cam</button>
+              <button type="button" class="chip" id="snap-pip" disabled>Snap you</button>
+              <label class="chip">Upload you<input type="file" id="up-pip" accept="image/*" hidden /></label>
+            </div>
+            <button type="button" class="linkish" id="skip-snap">skip snaps (poster only)</button>
+          </article>
 
-          <div class="card step" id="step-rate">
-            <div class="step-n">3 · Liked it?</div>
-            <div class="vibe-row" role="group" aria-label="Did you like it">
-              <button type="button" class="vibe" data-liked="yes">Liked it</button>
-              <button type="button" class="vibe" data-liked="no">Not for me</button>
+          <article class="panel">
+            <p class="panel__step">03 vibe</p>
+            <div class="vibe" role="group" aria-label="How was it">
+              <button type="button" class="vibe__btn" data-vibe="liked">Liked</button>
+              <button type="button" class="vibe__btn" data-vibe="mid">Mid</button>
+              <button type="button" class="vibe__btn" data-vibe="dislike">Dislike</button>
             </div>
-            <label class="note-label">
-              Short note
-              <input id="note" maxlength="120" placeholder="one line is enough" />
-            </label>
-            <label class="note-label">
-              With (optional)
-              <input id="with" maxlength="60" placeholder="solo / Maya / film club" />
-            </label>
-            <button class="btn primary block" id="save" type="button">Save to shelf</button>
-            <p class="fine">Photos stay on this device.</p>
-          </div>
+            <label class="lbl">Note <input id="note" class="field" maxlength="100" placeholder="one crooked line…" /></label>
+            <label class="lbl">With <input id="with" class="field" maxlength="40" placeholder="optional" /></label>
+          </article>
+
+          <article class="panel" id="compare-panel" hidden>
+            <p class="panel__step">04 place it</p>
+            <p class="hint" id="compare-prompt">Which do you like more?</p>
+            <div class="compare" id="compare"></div>
+          </article>
+
+          <button type="button" class="btn-block" id="btn-save" hidden>Save to rank</button>
         </section>
 
-        <section id="view-shelf" class="view" hidden>
-          <div class="toolbar">
-            <div>
-              <div class="eyebrow">Your shelf</div>
-              <h2>Everything you logged</h2>
-            </div>
-            <div class="stats" id="stats"></div>
+        <!-- RANK -->
+        <section id="view-rank" class="view" hidden>
+          <div class="section-head">
+            <h2>Your ranking</h2>
+            <p class="hint" id="rank-meta">empty ladder</p>
           </div>
-          <div class="diary" id="diary"></div>
+          <ol id="rank-list" class="ladder"></ol>
+        </section>
+
+        <!-- PICKS -->
+        <section id="view-picks" class="view" hidden>
+          <div class="section-head">
+            <h2>From your ladder</h2>
+            <p class="hint">pulled from genres sitting high on your list</p>
+          </div>
+          <div id="picks" class="picks"></div>
         </section>
       </main>
 
       <footer class="foot">
-        <span>Built by <a href="https://github.com/sheinapribadi-star">Sheina Pribadi</a></span>
+        <span>Sheina Pribadi</span>
         <span>ReelWith</span>
       </footer>
     </div>
