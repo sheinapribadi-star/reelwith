@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>ReelWith · Log what you watched</title>
+    <meta name="description" content="Snap a pic of movie night, say if you liked it, write a short note. Get picks based on what you loved." />
+    <meta name="theme-color" content="#0E0E14" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2314141c'/><circle cx='50' cy='50' r='28' fill='%23e8a23a'/><circle cx='50' cy='50' r='12' fill='%2314141c'/></svg>" />
+    <script type="module" crossorigin src="/reelwith/assets/index-N50TPTcF.js"></script>
+    <link rel="stylesheet" crossorigin href="/reelwith/assets/index-BM_ACPh2.css">
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="app">
+      <header class="top">
+        <div class="brand">
+          <div class="mark" aria-hidden="true"></div>
+          <div>
+            <div class="name">ReelWith</div>
+            <div class="tag">log movie night in one go</div>
+          </div>
+        </div>
+        <button class="btn primary sm" id="go-log" type="button">+ Log</button>
+      </header>
+
+      <p class="intro" id="intro">
+        Snap (or upload) a pic from movie night, tap liked or not, add a short note.
+        That&rsquo;s the whole log. Your shelf builds recommendations from what you loved.
+      </p>
+
+      <nav class="tabs" role="tablist" aria-label="Main">
+        <button class="tab on" data-view="home" type="button">Home</button>
+        <button class="tab" data-view="log" type="button">Log</button>
+        <button class="tab" data-view="shelf" type="button">Shelf</button>
+      </nav>
+
+      <main>
+        <section id="view-home" class="view on">
+          <div class="toolbar">
+            <div>
+              <div class="eyebrow">For you</div>
+              <h2>Based on your likes</h2>
+            </div>
+          </div>
+          <div class="poster-rail" id="recs" aria-label="Recommendations"></div>
+
+          <div class="toolbar">
+            <div>
+              <div class="eyebrow">Recent</div>
+              <h2>Watch log</h2>
+            </div>
+            <button class="btn ghost sm" id="seed" type="button">Sample friends</button>
+          </div>
+          <div class="feed" id="feed"></div>
+        </section>
+
+        <section id="view-log" class="view" hidden>
+          <div class="toolbar">
+            <div>
+              <div class="eyebrow">One flow</div>
+              <h2>Log a watch</h2>
+            </div>
+          </div>
+          <p class="lede-sm">Pick a film → photo → liked? → short note → save.</p>
+
+          <div class="card step">
+            <div class="step-n">1 · Film</div>
+            <input id="movie-search" type="search" placeholder="Search titles…" autocomplete="off" />
+            <div class="pick-grid" id="search-results"></div>
+            <div class="picked" id="picked" hidden></div>
+          </div>
+
+          <div class="card step" id="step-photo">
+            <div class="step-n">2 · Photo</div>
+            <div class="viewfinder" id="viewfinder">
+              <video id="cam" playsinline muted hidden></video>
+              <img id="snap-preview" alt="" hidden />
+              <div class="vf-ph" id="vf-ph">
+                <p>Snap the couch, the screen, whoever&rsquo;s there.</p>
+              </div>
+            </div>
+            <div class="cam-actions">
+              <button class="btn ghost" id="start-cam" type="button">Camera</button>
+              <button class="btn ghost" id="take-snap" type="button" disabled>Snap</button>
+              <label class="btn ghost">
+                Upload
+                <input type="file" id="upload-snap" accept="image/*" capture="environment" hidden />
+              </label>
+              <button class="btn ghost" id="skip-photo" type="button">Skip photo</button>
+            </div>
+          </div>
+
+          <div class="card step" id="step-rate">
+            <div class="step-n">3 · Liked it?</div>
+            <div class="vibe-row" role="group" aria-label="Did you like it">
+              <button type="button" class="vibe" data-liked="yes">Liked it</button>
+              <button type="button" class="vibe" data-liked="no">Not for me</button>
+            </div>
+            <label class="note-label">
+              Short note
+              <input id="note" maxlength="120" placeholder="one line is enough" />
+            </label>
+            <label class="note-label">
+              With (optional)
+              <input id="with" maxlength="60" placeholder="solo / Maya / film club" />
+            </label>
+            <button class="btn primary block" id="save" type="button">Save to shelf</button>
+            <p class="fine">Photos stay on this device.</p>
+          </div>
+        </section>
+
+        <section id="view-shelf" class="view" hidden>
+          <div class="toolbar">
+            <div>
+              <div class="eyebrow">Your shelf</div>
+              <h2>Everything you logged</h2>
+            </div>
+            <div class="stats" id="stats"></div>
+          </div>
+          <div class="diary" id="diary"></div>
+        </section>
+      </main>
+
+      <footer class="foot">
+        <span>Built by <a href="https://github.com/sheinapribadi-star">Sheina Pribadi</a></span>
+        <span>ReelWith</span>
+      </footer>
+    </div>
+    <div id="toast" class="toast" hidden role="status"></div>
+  </body>
+</html>
