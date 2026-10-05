@@ -1,35 +1,15 @@
-const KEY = 'reelwith.entries.v2';
+const KEY = 'reelwith.v3';
 
-export function loadEntries() {
+export function loadState() {
   try {
-    const v2 = JSON.parse(localStorage.getItem(KEY) || 'null');
-    if (Array.isArray(v2)) return v2;
-    // migrate old split stores if present
-    const moments = JSON.parse(localStorage.getItem('reelwith.moments.v1') || '[]');
-    const logs = JSON.parse(localStorage.getItem('reelwith.logs.v1') || '[]');
-    if (!moments.length && !logs.length) return [];
-    const merged = [];
-    logs.forEach((l) => {
-      merged.push({
-        id: l.id,
-        movieId: l.movieId,
-        liked: l.vibe === 'loved' || l.vibe === 'fine' || l.liked === true,
-        note: l.review || l.note || '',
-        withWho: l.withWho || '',
-        who: 'You',
-        photo: null,
-        when: l.when || Date.now(),
-        sample: false,
-      });
-    });
-    return merged;
-  } catch {
-    return [];
-  }
+    const raw = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (raw && Array.isArray(raw.rank) && raw.entries) return raw;
+  } catch { /* fall through */ }
+  return { rank: [], entries: {}, feed: [] };
 }
 
-export function saveEntries(list) {
-  localStorage.setItem(KEY, JSON.stringify(list));
+export function saveState(state) {
+  localStorage.setItem(KEY, JSON.stringify(state));
 }
 
 export function uid() {
