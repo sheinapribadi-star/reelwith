@@ -1,20 +1,17 @@
 # ReelWith
 
-**Rate movies with friends. Snap who you’re watching with.**
-
-Beli-style soft ratings (Loved / Fine / Nah → your score) plus BeReal-style watch moments (photo + crew + caption). A warmer Letterboxd alternative.
+**Log movie night in one go.** Snap (or upload) a pic, tap liked or not, write a short note. Your shelf builds simple recommendations from what you loved.
 
 **Live demo:** https://sheinapribadi-star.github.io/reelwith/
 
-See `PRD.md`, `DESIGN_BRIEF.md`, and `research/REFERENCES.md`.
+## Flow
+1. Pick a film (poster catalog)
+2. Photo (camera, upload, or skip)
+3. Liked it / Not for me + short note
+4. Save → feed + shelf + “for you” picks
 
-## Features
-- Onboarding that explains the thesis
-- Ternary vibe → derived /10 score
-- Watch moments with camera or upload + PiP crew chip
-- Friend feed (seedable samples)
-- Diary + want-to-watch queue
-- Curated catalog (TMDB-shaped; no API key)
+## Stack
+Vite + vanilla JS. Posters via TMDB image CDN. Data in `localStorage`.
 
 ## Develop
 ```bash

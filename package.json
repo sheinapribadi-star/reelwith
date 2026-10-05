@@ -1,7 +1,7 @@
 {
   "name": "reelwith",
   "version": "1.0.0",
-  "description": "Rate movies with friends. Snap who you're watching with. Letterboxd meets BeReal.",
+  "description": "Snap movie night, say if you liked it, get picks from your shelf.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
