@@ -55,30 +55,87 @@ export function bandBounds(rankIds, entriesById, vibe) {
   return { lo, hi };
 }
 
+/**
+ * Blended ranking inspired by Netflix's approach (Amatriain & Basilico, 2012).
+ * Combines personal preference (inferred from ranked titles) with popularity.
+ * Popularity alone is a strong baseline but not personalized; predicted preference
+ * alone can surface overly niche titles. A blend beats pure popularity and provides
+ * a balance of familiar hits and personalized taste.
+ */
 export function recommendFromRank(rankIds, entriesById, catalog, limit = 8) {
-  const seen = new Set(rankIds);
-  const genreScore = {};
-  rankIds.slice(0, Math.min(8, rankIds.length)).forEach((id, i) => {
-    const e = entriesById[id];
-    const g = e?.genre || catalog.find((m) => m.id === id)?.genre;
-    if (!g) return;
-    genreScore[g] = (genreScore[g] || 0) + (8 - i);
-  });
-  const picks = catalog
-    .filter((m) => !seen.has(m.id))
-    .map((m) => ({
-      movie: m,
-      score: genreScore[m.genre] || 0,
-      reason: genreScore[m.genre]
-        ? `Fits your ${m.genre.toLowerCase()} ranking`
-        : 'Fresh pick',
-    }))
-    .sort((a, b) => b.score - a.score || b.movie.year - a.movie.year);
-  if (!Object.keys(genreScore).length) {
-    return catalog.filter((m) => !seen.has(m.id)).slice(0, limit).map((m) => ({
+  const n = rankIds.length;
+
+  // Build set of already-ranked movie IDs
+  const seenMovieIds = new Set(
+    rankIds.map((id) => entriesById[id]?.movieId).filter(Boolean)
+  );
+
+  if (!n) {
+    return catalog.filter((m) => !seenMovieIds.has(m.id)).slice(0, limit).map((m) => ({
       movie: m,
       reason: 'Start ranking to personalize',
     }));
   }
+
+  // 1. Infer personal preference from ranked titles (genre affinity + positional weight)
+  const genreScore = {};
+  const likedTitles = [];
+  rankIds.slice(0, Math.min(10, n)).forEach((id, i) => {
+    const e = entriesById[id];
+    const g = e?.genre || catalog.find((m) => m.id === id)?.genre;
+    if (!g) return;
+    const weight = 10 - i;
+    genreScore[g] = (genreScore[g] || 0) + weight;
+    if (e?.vibe === 'liked' && i < 5) {
+      likedTitles.push({ title: e.title, genre: g });
+    }
+  });
+
+  // 2. Normalize popularity to 0-1 range for blending
+  const maxPop = Math.max(...catalog.map((m) => m.popularity || 0));
+  const minPop = Math.min(...catalog.map((m) => m.popularity || 0));
+  const popRange = maxPop - minPop || 1;
+
+  // 3. Score each unseen movie with a blend of preference + popularity
+  const picks = catalog
+    .filter((m) => !seenMovieIds.has(m.id))
+    .map((m) => {
+      const prefScore = genreScore[m.genre] || 0;
+      const normPop = ((m.popularity || 0) - minPop) / popRange;
+      // Blend: 60% personal preference, 40% popularity
+      // This weights personalization higher but keeps popular titles visible
+      const blendedScore = 0.6 * (prefScore / 10) + 0.4 * normPop;
+
+      // Generate transparent explanation based on scoring factors
+      let reason = '';
+      let explainSource = null;
+      if (prefScore > 0) {
+        const anchorTitle = likedTitles.find((t) => t.genre === m.genre);
+        if (anchorTitle) {
+          reason = `You liked ${anchorTitle.title}`;
+          explainSource = 'liked-title';
+        } else {
+          reason = `Fits your ${m.genre.toLowerCase()} taste`;
+          explainSource = 'genre-affinity';
+        }
+      } else if (normPop > 0.7) {
+        reason = 'Popular pick';
+        explainSource = 'popularity';
+      } else {
+        reason = 'Fresh pick';
+        explainSource = 'fallback';
+      }
+
+      return {
+        movie: m,
+        score: blendedScore,
+        prefScore,
+        popScore: normPop,
+        reason,
+        explainSource,
+      };
+    })
+    .sort((a, b) => b.score - a.score || b.movie.year - a.movie.year);
+
   return picks.slice(0, limit);
 }
