@@ -20,6 +20,26 @@ npm install && npm run dev
 npm run build
 ```
 
+## Recommendation approach
+
+Picks use a blended ranking inspired by Netflix's personalization engineering (Xavier Amatriain and Justin Basilico, 2012). The key insight from their work:
+
+- **Popularity alone** is a strong baseline but gives everyone the same order (no personalization)
+- **Predicted preference alone** can surface titles that are too niche or unfamiliar
+- **A blend of both** beats pure popularity and balances familiar hits with personal taste
+
+ReelWith's tiny version combines two signals:
+1. **Personal preference** (60% weight): inferred from your ranked titles, genres you placed highly, and what you liked
+2. **Popularity** (40% weight): normalized TMDB popularity scores
+
+Each pick shows a short explanation (for example, "You liked Past Lives" or "Fits your drama taste") so you can see why it appeared. This is deliberately simple and inspectable: no fake deep learning, just transparent scoring a student can explain.
+
+**Sources:**
+- [Netflix Recommendations: Beyond the 5 stars (Part 1)](https://netflixtechblog.com/netflix-recommendations-beyond-the-5-stars-part-1-55838468f429)
+- [Netflix Recommendations: Beyond the 5 stars (Part 2)](https://netflixtechblog.com/netflix-recommendations-beyond-the-5-stars-part-2-d9b96aa399f5)
+
+By Xavier Amatriain and Justin Basilico, Personalization Science and Engineering, Netflix.
+
 ## Author
 Sheina Pribadi · UC Berkeley
 
